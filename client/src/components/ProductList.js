@@ -1,7 +1,8 @@
-import React,{ useEffect, useState }from 'react';
+import React from 'react';
 import { Link } from '@reach/router';
-import axios from 'axios';
 import Delete from '../components/Delete';
+
+
 
 const ProductList =(props)=>
 {
