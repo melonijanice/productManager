@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Link,navigate } from '@reach/router';
 import Delete from '../components/Delete';
+import ProductForm from '../components/ProductForm';
 const Edit=(props)=>
 {
      //keep track of what is being typed via useState hook
      const [title, setTitle] = useState(""); 
      const [price, setPrice] = useState("");
      const [description, setDescription] = useState("");
+     const [errors, setErrors] = useState({});
+     const [loaded, setLoaded] = useState(false);
      const redirectAfterDelete=()=>
     {
-        navigate("/restaurants");
+        navigate("/product");
     }
      useEffect(()=>{
          axios.get('http://localhost:8000/api/productmanager/'+props.id)
@@ -18,42 +21,31 @@ const Edit=(props)=>
                 setTitle(res.data.title);
                 setPrice(res.data.price);
                 setDescription(res.data.description);
-             });
+                setLoaded(true);
+             })
+             .catch(err=>navigate("/product/"));
      },[])
-    const onSubmitHandler=(event)=>
+    const UpdateProduct=(updatedProduct)=>
     {
         //prevent default behavior of the submit
-        event.preventDefault();
+        console.log(updatedProduct);
+        setTitle(updatedProduct.title);
+        setPrice(updatedProduct.price);
+        setDescription(updatedProduct.description);
         
-        axios.put('http://localhost:8000/api/productmanager/'+props.id, {
-            title,
-            price,  
-            description
-        })
+        axios.put('http://localhost:8000/api/productmanager/'+props.id,updatedProduct)
             .then(res=>{console.log(res);
                 navigate("/product/"+props.id)
             })
-            .catch(err=>console.log(err))
+            .catch(err=>
+                setErrors(err.response.data.errors)
+                )
     }
     
     
     return (<div>
-        <form onSubmit={onSubmitHandler}>
-            <p>
-                <label>Title</label><br/>
-                <input type="text" value={title} onChange = {(e)=>setTitle(e.target.value)}/>
-            </p>
-            <p>
-                <label>Price</label><br/>
-                <input type="text" value={price} onChange = {(e)=>setPrice(e.target.value)}/>
-            </p>
-            <p>
-                <label>Description</label><br/>
-                <input type="text" value={description} onChange = {(e)=>setDescription(e.target.value)}/>
-            </p>
-        </form>
-        <button className="editBtn" type="submit" onClick={onSubmitHandler}>Update Restaurant</button>
-        <Delete id={props.id} afterDelete={redirectAfterDelete}/>
+         {loaded && <ProductForm onSubmitProp={UpdateProduct} initialTitle={title} initialPrice={price} initialDescription={description} errorData={errors}/>}
+            <Delete id={props.id} afterDelete={redirectAfterDelete}/>
         </div>
     )
 }

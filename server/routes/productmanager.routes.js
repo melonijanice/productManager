@@ -5,6 +5,4 @@ module.exports = function(app){
     app.get('/api/productmanager/:id', ProductManagerController.getProduct);
     app.put('/api/productmanager/:id',ProductManagerController.update);
     app.delete('/api/productmanager/:id',ProductManagerController.delete);
-
-
 }

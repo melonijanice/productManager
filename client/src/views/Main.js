@@ -5,15 +5,23 @@ import axios from 'axios';
 import io from 'socket.io-client';
 
 const Main = () => {
+
     const [products, setProducts] = useState([]);
+    const [errors, setErrors] = useState({});
+    const [title, setTitle] = useState("");
+    const [price, setPrice] = useState("");
+    const [description, setDescription] = useState("");
     //const [socket] = useState(() => io(':8000'));
     const [socket] = useState(() => io('http://localhost:8000'));
+
+    
     
     useEffect(()=>{
         console.log("Inside Socket.io");
         //socket.on("connect",()=>{console.log("we are connected"+socket.id);})
         console.log(socket);
         socket.on("connect", () => {
+
             console.log("Connected on the client - ID: " + socket.id)
         })
         
@@ -50,14 +58,20 @@ const Main = () => {
             socket.emit('added_product',res.data);
             socket.disconnect();
                setProducts([...products, res.data]);
-            
+               setTitle("");
+               setPrice("");
+               setDescription("");
+               setErrors("")
             console.log("Created Products" + [...products, res.data]);
         })
-           .catch(err=>console.log(err))
+           .catch(err=>{
+               console.log(err);
+               setErrors(err.response.data.errors)
+            })
    }
     return (
         <div>
-           <ProductForm onSubmitProp={createProducts} initialTitle="" initialPrice="" initialDescription=""/>
+           <ProductForm onSubmitProp={createProducts} initialTitle={title} initialPrice={price} initialDescription={description} errorData={errors}/>
            <hr/>
            <ProductList products={products} removefromDOM={removefromDOM}/>
         </div>

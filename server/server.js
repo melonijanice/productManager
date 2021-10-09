@@ -30,9 +30,10 @@ io.on("connection", socket => {
     console.log('socket id: ' + socket.id);
     // We add our additional event listeners right inside this function
     // NOTE: "connection" is a BUILT IN events listener
-    socket.on('added_product',(data)=>{console.log("added new product",data);
-    console.log('socket id_new: ' + socket.id);
-    socket.broadcast.emit('product_added',data);});
-});
+    socket.on('added_product',(data)=>{
+        console.log("added new product",data);
+        console.log('socket id_new: ' + socket.id);
+        socket.broadcast.emit('product_added',data);});
+    });
 
 
