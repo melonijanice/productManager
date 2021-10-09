@@ -11,8 +11,8 @@ const Main = () => {
     const [title, setTitle] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
-    //const [socket] = useState(() => io(':8000'));
-    const [socket] = useState(() => io('http://localhost:8000'));
+    const [socket] = useState(() => io(':8000'));
+    //const [socket] = useState(() => io('http://localhost:8000'));
 
     
     
