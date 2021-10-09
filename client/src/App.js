@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <Router> 
-        <Main path="/product/"/>
+        <Main path="/" default/>
         <Detail path="/product/:id" />
         <Edit path="/product/:id/edit" />
       </Router>
