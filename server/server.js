@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app=express();
+const http = require('http').Server(app);
 require('./config/mongoose.config'); 
 
 const socket = require('socket.io');
@@ -13,15 +14,20 @@ app.use(express.urlencoded({ extended: true }));
 require('./routes/productmanager.routes')(app);
 const port=8000;
 const server=app.listen(port,()=>{`Listening in port ${port}` });
+
+const io = require('socket.io')(http);
+http.listen(3000, function(){
+    console.log('listening on *:3000');
+  });
 // We must also include a configuration settings object to prevent CORS errors
-const io = socket(server, {
+/* const io = socket(server, {
     cors: {
         origin: 'http://localhost:3000',
         methods: ['GET', 'POST'],
         allowedHeaders: ['*'],
         credentials: true,
     }
-});
+}); */
 
 io.on("connection", socket => {
     // NOTE: Each client that connects get their own socket id!
